@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1f5133" />
+  <title>Wildprodukte Bestand</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg: #f3f5f2;
+      --card: #ffffff;
+      --text: #1c241d;
+      --muted: #66736a;
+      --line: #d9e1db;
+      --brand: #1f5133;
+      --brand-2: #2c6a46;
+      --danger: #b23b3b;
+      --warn: #8a5a00;
+      --shadow: 0 10px 30px rgba(31,81,51,.10);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .app {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 16px 14px 40px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--brand), #173923);
+      color: white;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: 1.55rem;
+    }
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      line-height: 1.4;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .tab-btn {
+      border: 0;
+      background: #e5ebe6;
+      color: #26402f;
+      border-radius: 14px;
+      padding: 12px 10px;
+      font-weight: 700;
+    }
+    .tab-btn.active {
+      background: var(--brand);
+      color: white;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .kpi {
+      background: #f8faf8;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .kpi small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .kpi strong {
+      font-size: 1.25rem;
+    }
+    label {
+      display: block;
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-size: 16px;
+      background: #fff;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: .97rem;
+      font-weight: 700;
+      background: var(--brand);
+      color: white;
+    }
+    button.secondary { background: #edf1ee; color: #1f3a2b; }
+    button.danger { background: var(--danger); }
+    button.warn { background: var(--warn); }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .row > * { flex: 1 1 160px; }
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fbfcfb;
+    }
+    .item h3, .item h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+    .muted { color: var(--muted); }
+    .pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #e8f0ea;
+      font-size: .83rem;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .hidden { display: none !important; }
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+    }
+    .table-like {
+      display: grid;
+      gap: 8px;
+    }
+    .summary-row {
+      display: grid;
+      grid-template-columns: 1.6fr .6fr .7fr .8fr;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+    .searchbar {
+      margin-bottom: 12px;
+    }
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: 10px;
+    }
+    .tiny { font-size: .86rem; }
+    .print-note {
+      background: #f8faf8;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .check-row input {
+      width: auto;
+      transform: scale(1.1);
+    }
+    @media (max-width: 760px) {
+      .tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .summary-row {
+        grid-template-columns: 1fr;
+      }
+      .app {
+        padding: 12px 12px 36px;
+      }
+      .hero {
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <h1>Wildprodukte Bestand</h1>
+      <p>Android-taugliche Offline-App auf Basis deiner Excel-Datei. Sie läuft direkt im Browser und kann auf dem Handy zum Startbildschirm hinzugefügt werden.</p>
+      <div class="top-actions">
+        <button onclick="app.exportBackup()">Backup exportieren</button>
+        <button class="secondary" onclick="document.getElementById('backupFile').click()">Backup importieren</button>
+        <button class="secondary" onclick="app.resetDemo()">Auf Originaldaten zurücksetzen</button>
+        <input id="backupFile" type="file" accept=".json" class="hidden" />
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="overview">Übersicht</button>
+      <button class="tab-btn" data-tab="stock">Bestand</button>
+      <button class="tab-btn" data-tab="add">Eintragen</button>
+      <button class="tab-btn" data-tab="products">Produkte</button>
+    </div>
+
+    <section id="tab-overview" class="tab-panel">
+      <div class="grid grid-3">
+        <div class="kpi"><small>Produkte</small><strong id="kpiProducts">0</strong></div>
+        <div class="kpi"><small>Einzelpositionen</small><strong id="kpiEntries">0</strong></div>
+        <div class="kpi"><small>Bestandswert</small><strong id="kpiValue">0 €</strong></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Zusammenfassung</h2>
+        <input id="summarySearch" class="searchbar" type="search" placeholder="Produkt suchen..." />
+        <div id="summaryList" class="table-like"></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Kunden-PDF erstellen</h2>
+        <div class="grid grid-2">
+          <div>
+            <label for="pdfTitle">Überschrift</label>
+            <input id="pdfTitle" type="text" value="Aktuell verfügbarer Wildbestand" />
+          </div>
+          <div>
+            <label for="pdfCustomer">Kunde / Empfänger</label>
+            <input id="pdfCustomer" type="text" placeholder="optional" />
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <label for="pdfNote">Zusatztext</label>
+          <textarea id="pdfNote" placeholder="z. B. Preise vorbehaltlich Verfügbarkeit. Bestellung gerne per WhatsApp."></textarea>
+        </div>
+        <label class="check-row" for="pdfIncludePrices">
+          <input id="pdfIncludePrices" type="checkbox" checked />
+          <span>Preise im PDF anzeigen</span>
+        </label>
+        <div class="row" style="margin-top:14px;">
+          <button onclick="app.exportStockPdf()">Bestand als PDF ausgeben</button>
+        </div>
+        <div class="print-note tiny muted">
+          Es wird eine druckfertige Ansicht geöffnet. Auf dem Handy kannst du dort „Als PDF speichern" oder direkt „Teilen" wählen.
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-stock" class="tab-panel hidden">
+      <div class="card">
+        <div class="row">
+          <div>
+            <label for="stockFilter">Filter</label>
+            <input id="stockFilter" type="search" placeholder="Produkt oder Notiz suchen..." />
+          </div>
+        </div>
+      </div>
+      <div id="stockList" class="list"></div>
+    </section>
+
+    <section id="tab-add" class="tab-panel hidden">
+      <div class="card">
+        <h2 class="section-title">Neuen Bestand eintragen</h2>
+        <div class="grid grid-2">
+          <div>
+            <label for="entryDate">Datum</label>
+            <input id="entryDate" type="date" />
+          </div>
+          <div>
+            <label for="entryProduct">Produkt</label>
+            <select id="entryProduct"></select>
+          </div>
+          <div>
+            <label for="entryQty">Menge</label>
+            <input id="entryQty" type="number" step="0.01" placeholder="z. B. 750" />
+          </div>
+          <div>
+            <label for="entryUnitInfo">Info</label>
+            <input id="entryUnitInfo" type="text" disabled />
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <label for="entryNote">Notiz</label>
+          <textarea id="entryNote" placeholder="Optional, z. B. vakuumiert / Etikett / Lagerfach"></textarea>
+        </div>
+        <div class="row" style="margin-top:14px;">
+          <button onclick="app.addEntry()">Speichern</button>
+          <button class="secondary" onclick="app.fillToday()">Heutiges Datum</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-products" class="tab-panel hidden">
+      <div class="card">
+        <h2 class="section-title">Produkt anlegen</h2>
+        <div class="grid grid-2">
+          <div>
+            <label for="newProductName">Produktname</label>
+            <input id="newProductName" type="text" placeholder="z. B. Reh Schulter" />
+          </div>
+          <div>
+            <label for="newProductUnit">Einheit</label>
+            <input id="newProductUnit" type="text" value="g" />
+          </div>
+          <div>
+            <label for="newProductPrice">Preis je Einheit (€)</label>
+            <input id="newProductPrice" type="number" step="0.01" placeholder="23" />
+          </div>
+          <div>
+            <label for="newProductUnitAmount">Einheitsmenge</label>
+            <input id="newProductUnitAmount" type="number" step="0.01" value="1000" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:14px;">
+          <button onclick="app.addProduct()">Produkt speichern</button>
+        </div>
+      </div>
+      <div id="productList" class="list"></div>
+    </section>
+
+    <div class="footer-note">Daten werden lokal im Browser gespeichert.</div>
+  </div>
+
+  <script>
+    const INITIAL_PRODUCTS = [{"id": "p1", "name": "Reh Keule ohne Knochen (z.B. als Schmorbraten)", "pricePerUnit": 23.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p2", "name": "Reh Rücken (ausgelöst, ohne Knochen)", "pricePerUnit": 39.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p3", "name": "Reh Gulasch (durchwachsener)", "pricePerUnit": 17.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p4", "name": "Reh Gulasch (Edelgulasch Keule)", "pricePerUnit": 23.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p5", "name": "Reh Schnitzel / Steaks (Hüfte)", "pricePerUnit": 23.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p6", "name": "Reh Marinierte Hüft Steaks (besonders zart & mager)", "pricePerUnit": 26.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p7", "name": "Reh am Stück in der Decke", "pricePerUnit": 5.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p8", "name": "Wildschwein Keule ohne Knochen (z.B. als Schmorbraten)", "pricePerUnit": 21.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p9", "name": "Wildschwein Rücken (ausgelöst, ohne Knochen)", "pricePerUnit": 27.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p10", "name": "Wildschwein Filet", "pricePerUnit": 29.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p11", "name": "Wildschwein Gulasch (durchwachsener)", "pricePerUnit": 16.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p12", "name": "Wildschwein Gulasch (Edelgulasch Keule)", "pricePerUnit": 22.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p13", "name": "Wildschwein Schnitzel / Steaks (Ober-/Unterschale)", "pricePerUnit": 22.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p14", "name": "Wildschwein Marinierte Rücken/Filet Steaks", "pricePerUnit": 28.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p15", "name": "Wildschwein am Stück in der Schwarte", "pricePerUnit": 4.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p16", "name": "Wilde Rohesser 5 St.", "pricePerUnit": 8.5, "unitAmount": 1.0, "unit": "Pack"}, {"id": "p17", "name": "Wildsalami ca. 350–400 g", "pricePerUnit": 12.0, "unitAmount": 1.0, "unit": "St"}, {"id": "p18", "name": "Wildschinken (auf Anfrage 300–500 g)", "pricePerUnit": 37.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p19", "name": "Wienerwurst vom Reh 5 St.", "pricePerUnit": 7.0, "unitAmount": 1.0, "unit": "Pack"}, {"id": "p20", "name": "Reh Ragout Dose verzehrfertig 400 g", "pricePerUnit": 8.5, "unitAmount": 1.0, "unit": "Dose"}, {"id": "p21", "name": "Wild Gulasch Dose verzehrfertig 400 g", "pricePerUnit": 8.0, "unitAmount": 1.0, "unit": "Dose"}, {"id": "p22", "name": "Wildbolognese Dose verzehrfertig 400 g", "pricePerUnit": 6.9, "unitAmount": 1.0, "unit": "Dose"}, {"id": "p23", "name": "Wilder Pizzafleischkäse (verzehrfertig) in Scheiben (2/4 Pack)", "pricePerUnit": 19.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p24", "name": "Feldhase (komplett ohne Fell, nur Vorbestellung)", "pricePerUnit": 35.0, "unitAmount": 1000.0, "unit": "g"}, {"id": "p25", "name": "Wildbratwurst 5 St.", "pricePerUnit": 8.5, "unitAmount": 1.0, "unit": "Pack"}, {"id": "p26", "name": "Wildkäsebratwurst 5 St.", "pricePerUnit": 9.5, "unitAmount": 1.0, "unit": "Pack"}, {"id": "p27", "name": "Wildburger Patties ca. 200 g (2/4 Pack)", "pricePerUnit": 2.9, "unitAmount": 1.0, "unit": "St"}, {"id": "p28", "name": "Wurstfleisch Sau/Reh", "pricePerUnit": 7.0, "unitAmount": 1000.0, "unit": "g"}];
+    const INITIAL_ENTRIES = [{"id": "e1", "date": "", "productName": "Reh Gulasch (durchwachsener)", "quantity": 1000.0, "note": ""}, {"id": "e2", "date": "", "productName": "Reh Gulasch (durchwachsener)", "quantity": 1000.0, "note": ""}, {"id": "e3", "date": "", "productName": "Reh Gulasch (Edelgulasch Keule)", "quantity": 1000.0, "note": ""}, {"id": "e4", "date": "", "productName": "Reh Gulasch (Edelgulasch Keule)", "quantity": 1000.0, "note": ""}, {"id": "e6", "date": "", "productName": "Reh Gulasch (Edelgulasch Keule)", "quantity": 500.0, "note": ""}, {"id": "e7", "date": "", "productName": "Reh Gulasch (Edelgulasch Keule)", "quantity": 750.0, "note": ""}, {"id": "e8", "date": "", "productName": "Reh Gulasch (Edelgulasch Keule)", "quantity": 1000.0, "note": ""}, {"id": "e10", "date": "", "productName": "Reh Rücken (ausgelöst, ohne Knochen)", "quantity": 550.0, "note": ""}, {"id": "e11", "date": "", "productName": "Reh Schnitzel / Steaks (Hüfte)", "quantity": 500.0, "note": ""}, {"id": "e12", "date": "", "productName": "Reh Schnitzel / Steaks (Hüfte)", "quantity": 300.0, "note": "Hirsch"}, {"id": "e13", "date": "", "productName": "Reh Schnitzel / Steaks (Hüfte)", "quantity": 950.0, "note": ""}, {"id": "e14", "date": "", "productName": "Wienerwurst vom Reh 5 St.", "quantity": 3.0, "note": ""}, {"id": "e15", "date": "", "productName": "Wildbratwurst 5 St.", "quantity": 4.0, "note": ""}, {"id": "e16", "date": "", "productName": "Wildkäsebratwurst 5 St.", "quantity": 3.0, "note": ""}, {"id": "e17", "date": "", "productName": "Wildschwein Filet", "quantity": 350.0, "note": ""}, {"id": "e18", "date": "", "productName": "Wildschwein Gulasch (durchwachsener)", "quantity": 2000.0, "note": ""}, {"id": "e19", "date": "", "productName": "Wildschwein Gulasch (durchwachsener)", "quantity": 2000.0, "note": ""}, {"id": "e20", "date": "", "productName": "Wildschwein Gulasch (Edelgulasch Keule)", "quantity": 550.0, "note": ""}, {"id": "e22", "date": "", "productName": "Wildschwein Rücken (ausgelöst, ohne Knochen)", "quantity": 900.0, "note": ""}, {"id": "e23", "date": "", "productName": "Wildschwein Rücken (ausgelöst, ohne Knochen)", "quantity": 1100.0, "note": ""}, {"id": "e24", "date": "", "productName": "Wildschwein Rücken (ausgelöst, ohne Knochen)", "quantity": 1000.0, "note": ""}, {"id": "e25", "date": "", "productName": "Wildschwein Rücken (ausgelöst, ohne Knochen)", "quantity": 650.0, "note": ""}, {"id": "e26", "date": "", "productName": "Wildschwein Rücken (ausgelöst, ohne Knochen)", "quantity": 1100.0, "note": ""}];
+
+    const app = {
+      state: {
+        products: [],
+        entries: []
+      },
+
+      load() {
+        const saved = localStorage.getItem("wildbestand-app-data-v1");
+        if (saved) {
+          try {
+            this.state = JSON.parse(saved);
+          } catch (e) {
+            this.state = { products: INITIAL_PRODUCTS, entries: INITIAL_ENTRIES };
+          }
+        } else {
+          this.state = { products: INITIAL_PRODUCTS, entries: INITIAL_ENTRIES };
+        }
+        this.ensureProductConsistency();
+        this.bindEvents();
+        this.renderAll();
+        this.registerSW();
+      },
+
+      save() {
+        localStorage.setItem("wildbestand-app-data-v1", JSON.stringify(this.state));
+      },
+
+      ensureProductConsistency() {
+        const productNames = new Set(this.state.products.map(p => p.name));
+        this.state.entries = this.state.entries.filter(e => productNames.has(e.productName));
+      },
+
+      bindEvents() {
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+          btn.addEventListener("click", () => this.switchTab(btn.dataset.tab));
+        });
+        document.getElementById("summarySearch").addEventListener("input", () => this.renderSummary());
+        document.getElementById("stockFilter").addEventListener("input", () => this.renderStock());
+        document.getElementById("entryProduct").addEventListener("change", () => this.updateEntryInfo());
+        document.getElementById("backupFile").addEventListener("change", (e) => this.importBackup(e));
+      },
+
+      switchTab(tab) {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+        document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.add("hidden"));
+        document.getElementById("tab-" + tab).classList.remove("hidden");
+      },
+
+      renderAll() {
+        this.save();
+        this.populateProductSelect();
+        this.renderKPIs();
+        this.renderSummary();
+        this.renderStock();
+        this.renderProducts();
+        this.updateEntryInfo();
+      },
+
+      getProduct(name) {
+        return this.state.products.find(p => p.name === name);
+      },
+
+      calcEntryValue(entry) {
+        const p = this.getProduct(entry.productName);
+        if (!p || !p.unitAmount) return 0;
+        return (Number(entry.quantity) / Number(p.unitAmount)) * Number(p.pricePerUnit);
+      },
+
+      formatEuro(value) {
+        return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(value || 0);
+      },
+
+      formatQty(value) {
+        return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(value || 0);
+      },
+
+      escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      },
+
+      renderKPIs() {
+        const totalValue = this.state.entries.reduce((sum, e) => sum + this.calcEntryValue(e), 0);
+        document.getElementById("kpiProducts").textContent = this.state.products.length;
+        document.getElementById("kpiEntries").textContent = this.state.entries.length;
+        document.getElementById("kpiValue").textContent = this.formatEuro(totalValue);
+      },
+
+      getSummaryData() {
+        return this.state.products.map(product => {
+          const relevant = this.state.entries.filter(e => e.productName === product.name);
+          const quantity = relevant.reduce((sum, e) => sum + Number(e.quantity || 0), 0);
+          const value = relevant.reduce((sum, e) => sum + this.calcEntryValue(e), 0);
+          return { product, quantity, value };
+        }).sort((a, b) => b.value - a.value || b.quantity - a.quantity);
+      },
+
+      renderSummary() {
+        const q = (document.getElementById("summarySearch").value || "").toLowerCase().trim();
+        const rows = this.getSummaryData().filter(r => !q || r.product.name.toLowerCase().includes(q));
+        const root = document.getElementById("summaryList");
+        if (!rows.length) {
+          root.innerHTML = '<div class="item muted">Keine passenden Produkte gefunden.</div>';
+          return;
+        }
+        root.innerHTML = rows.map(r => `
+          <div class="summary-row">
+            <div><strong>${r.product.name}</strong></div>
+            <div>${this.formatQty(r.quantity)} ${r.product.unit}</div>
+            <div>${this.formatEuro(r.product.pricePerUnit)} / ${this.formatQty(r.product.unitAmount)} ${r.product.unit}</div>
+            <div><strong>${this.formatEuro(r.value)}</strong></div>
+          </div>
+        `).join("");
+      },
+
+      renderStock() {
+        const q = (document.getElementById("stockFilter").value || "").toLowerCase().trim();
+        const entries = [...this.state.entries].reverse().filter(e => {
+          const hay = `${e.productName} ${e.note || ""}`.toLowerCase();
+          return !q || hay.includes(q);
+        });
+        const root = document.getElementById("stockList");
+        if (!entries.length) {
+          root.innerHTML = '<div class="card muted">Keine Bestandspositionen vorhanden.</div>';
+          return;
+        }
+        root.innerHTML = entries.map(entry => {
+          const p = this.getProduct(entry.productName);
+          const value = this.calcEntryValue(entry);
+          return `
+            <div class="card item">
+              <h3>${entry.productName}</h3>
+              <div class="tiny muted">${entry.date ? "Datum: " + entry.date : "Datum: -"}</div>
+              <div style="margin:10px 0;">
+                <span class="pill">${this.formatQty(entry.quantity)} ${p?.unit || ""}</span>
+                <span class="pill">${this.formatEuro(value)}</span>
+                <span class="pill">${this.formatEuro(p?.pricePerUnit || 0)} / ${this.formatQty(p?.unitAmount || 0)} ${p?.unit || ""}</span>
+              </div>
+              ${entry.note ? `<div class="muted" style="margin-bottom:10px;">${entry.note}</div>` : ""}
+              <div class="row">
+                <button class="secondary" onclick="app.editEntry('${entry.id}')">Bearbeiten</button>
+                <button class="secondary" onclick="app.duplicateEntry('${entry.id}')">Duplizieren</button>
+                <button class="danger" onclick="app.deleteEntry('${entry.id}')">Löschen</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      },
+
+      renderProducts() {
+        const root = document.getElementById("productList");
+        root.innerHTML = this.state.products.map(p => `
+          <div class="card item">
+            <h4>${p.name}</h4>
+            <div class="muted" style="margin-bottom:10px;">
+              ${this.formatEuro(p.pricePerUnit)} je ${this.formatQty(p.unitAmount)} ${p.unit}
+            </div>
+            <div class="row">
+              <button class="secondary" onclick="app.editProduct('${p.id}')">Bearbeiten</button>
+              <button class="danger" onclick="app.deleteProduct('${p.id}')">Entfernen</button>
+            </div>
+          </div>
+        `).join("");
+      },
+
+      populateProductSelect() {
+        const sel = document.getElementById("entryProduct");
+        const options = this.state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join("");
+        sel.innerHTML = options;
+      },
+
+      updateEntryInfo() {
+        const productName = document.getElementById("entryProduct").value;
+        const p = this.getProduct(productName);
+        document.getElementById("entryUnitInfo").value = p
+          ? `${this.formatEuro(p.pricePerUnit)} pro ${this.formatQty(p.unitAmount)} ${p.unit}`
+          : "";
+      },
+
+      addEntry() {
+        const productName = document.getElementById("entryProduct").value;
+        const quantity = Number(document.getElementById("entryQty").value);
+        const date = document.getElementById("entryDate").value;
+        const note = document.getElementById("entryNote").value.trim();
+        if (!productName || !quantity) {
+          alert("Bitte Produkt und Menge eingeben.");
+          return;
+        }
+        this.state.entries.push({
+          id: "e" + Date.now(),
+          productName,
+          quantity,
+          date,
+          note
+        });
+        document.getElementById("entryQty").value = "";
+        document.getElementById("entryNote").value = "";
+        this.renderAll();
+        this.switchTab("stock");
+      },
+
+      editEntry(id) {
+        const entry = this.state.entries.find(e => e.id === id);
+        if (!entry) return;
+        const p = this.getProduct(entry.productName);
+        const newQuantity = prompt(`Neue Menge für ${entry.productName} in ${p?.unit || "Einheit"}`, entry.quantity);
+        if (newQuantity === null) return;
+        const parsedQuantity = Number(String(newQuantity).replace(",", "."));
+        if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0) {
+          alert("Bitte eine gültige Menge größer als 0 eingeben.");
+          return;
+        }
+        const newDate = prompt("Datum (optional)", entry.date || "");
+        if (newDate === null) return;
+        const newNote = prompt("Notiz (optional)", entry.note || "");
+        if (newNote === null) return;
+        entry.quantity = parsedQuantity;
+        entry.date = String(newDate).trim();
+        entry.note = String(newNote).trim();
+        this.renderAll();
+      },
+
+      duplicateEntry(id) {
+        const entry = this.state.entries.find(e => e.id === id);
+        if (!entry) return;
+        this.state.entries.push({ ...entry, id: "e" + Date.now() });
+        this.renderAll();
+      },
+
+      deleteEntry(id) {
+        if (!confirm("Diese Bestandsposition wirklich löschen?")) return;
+        this.state.entries = this.state.entries.filter(e => e.id !== id);
+        this.renderAll();
+      },
+
+      addProduct() {
+        const name = document.getElementById("newProductName").value.trim();
+        const unit = document.getElementById("newProductUnit").value.trim() || "g";
+        const pricePerUnit = Number(document.getElementById("newProductPrice").value);
+        const unitAmount = Number(document.getElementById("newProductUnitAmount").value);
+        if (!name || !pricePerUnit || !unitAmount) {
+          alert("Bitte Produktname, Preis und Einheitsmenge ausfüllen.");
+          return;
+        }
+        if (this.state.products.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+          alert("Produkt existiert bereits.");
+          return;
+        }
+        this.state.products.push({
+          id: "p" + Date.now(),
+          name, unit, pricePerUnit, unitAmount
+        });
+        document.getElementById("newProductName").value = "";
+        document.getElementById("newProductPrice").value = "";
+        this.renderAll();
+      },
+
+      editProduct(id) {
+        const p = this.state.products.find(x => x.id === id);
+        if (!p) return;
+        const newName = prompt("Produktname", p.name);
+        if (!newName) return;
+        const newPrice = prompt("Preis je Einheit (€)", p.pricePerUnit);
+        const newUnitAmount = prompt("Einheitsmenge", p.unitAmount);
+        const newUnit = prompt("Einheit", p.unit);
+        const oldName = p.name;
+        p.name = newName.trim();
+        p.pricePerUnit = Number(newPrice);
+        p.unitAmount = Number(newUnitAmount);
+        p.unit = (newUnit || p.unit).trim();
+        this.state.entries.forEach(e => {
+          if (e.productName === oldName) e.productName = p.name;
+        });
+        this.renderAll();
+      },
+
+      deleteProduct(id) {
+        const p = this.state.products.find(x => x.id === id);
+        if (!p) return;
+        const usageCount = this.state.entries.filter(e => e.productName === p.name).length;
+        if (usageCount > 0) {
+          alert("Produkt ist noch in Bestandspositionen vorhanden. Bitte erst die Positionen löschen oder umbenennen.");
+          return;
+        }
+        if (!confirm("Produkt wirklich entfernen?")) return;
+        this.state.products = this.state.products.filter(x => x.id !== id);
+        this.renderAll();
+      },
+
+      fillToday() {
+        document.getElementById("entryDate").value = new Date().toISOString().slice(0,10);
+      },
+
+      exportBackup() {
+        const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "wildbestand-backup.json";
+        a.click();
+      },
+
+      exportStockPdf() {
+        const includePrices = document.getElementById("pdfIncludePrices").checked;
+        const title = (document.getElementById("pdfTitle").value || "Aktuell verfügbarer Wildbestand").trim();
+        const customer = (document.getElementById("pdfCustomer").value || "").trim();
+        const note = (document.getElementById("pdfNote").value || "").trim();
+        const rows = this.getSummaryData().filter(r => Number(r.quantity) > 0);
+
+        if (!rows.length) {
+          alert("Es ist kein Bestand für den PDF-Export vorhanden.");
+          return;
+        }
+
+        const now = new Date();
+        const today = new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(now);
+        const htmlRows = rows.map(r => {
+          const priceInfo = includePrices
+            ? `<td style="padding:10px 12px;border-bottom:1px solid #d9e1db;text-align:right;white-space:nowrap;">${this.escapeHtml(this.formatEuro(r.product.pricePerUnit))} / ${this.escapeHtml(this.formatQty(r.product.unitAmount))} ${this.escapeHtml(r.product.unit)}</td>`
+            : "";
+          return `
+            <tr>
+              <td style="padding:10px 12px;border-bottom:1px solid #d9e1db;">${this.escapeHtml(r.product.name)}</td>
+              <td style="padding:10px 12px;border-bottom:1px solid #d9e1db;text-align:right;white-space:nowrap;">${this.escapeHtml(this.formatQty(r.quantity))} ${this.escapeHtml(r.product.unit)}</td>
+              ${priceInfo}
+            </tr>
+          `;
+        }).join("");
+
+        const headerCustomer = customer ? `<p style="margin:0 0 6px;"><strong>Für:</strong> ${this.escapeHtml(customer)}</p>` : "";
+        const noteBlock = note ? `<div style="margin-top:18px;padding:12px 14px;background:#f8faf8;border:1px solid #d9e1db;border-radius:12px;white-space:pre-wrap;">${this.escapeHtml(note)}</div>` : "";
+        const totalInfo = includePrices
+          ? `<p style="margin:14px 0 0;color:#66736a;">Gesamter Bestandswert: <strong>${this.escapeHtml(this.formatEuro(rows.reduce((sum, r) => sum + r.value, 0)))}</strong></p>`
+          : "";
+
+        const win = window.open("", "_blank");
+        if (!win) {
+          alert("Popup wurde blockiert. Bitte Popups für diese Seite erlauben.");
+          return;
+        }
+
+        win.document.write(`<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${this.escapeHtml(title)}</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #1c241d; margin: 28px; }
+    h1 { margin: 0 0 10px; color: #1f5133; }
+    .meta { margin-bottom: 18px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    th { text-align: left; background: #1f5133; color: #fff; padding: 10px 12px; }
+    th.right, td.right { text-align: right; }
+    .footer { margin-top: 24px; font-size: 12px; color: #66736a; }
+    @media print {
+      body { margin: 16mm; }
+      button { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>${this.escapeHtml(title)}</h1>
+  <div class="meta">
+    ${headerCustomer}
+    <p style="margin:0;"><strong>Stand:</strong> ${this.escapeHtml(today)}</p>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Produkt</th>
+        <th class="right">Menge</th>
+        ${includePrices ? '<th class="right">Preis</th>' : ''}
+      </tr>
+    </thead>
+    <tbody>
+      ${htmlRows}
+    </tbody>
+  </table>
+  ${totalInfo}
+  ${noteBlock}
+  <div class="footer">Erstellt mit der Wildprodukte-Bestandsapp.</div>
+  <script>
+    window.onload = function() {
+      window.print();
+    };
+  <\/script>
+</body>
+</html>`);
+        win.document.close();
+      },
+
+      importBackup(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = JSON.parse(reader.result);
+            if (!data.products || !data.entries) throw new Error("Ungültige Datei");
+            this.state = data;
+            this.renderAll();
+            alert("Backup importiert.");
+          } catch (e) {
+            alert("Datei konnte nicht importiert werden.");
+          }
+        };
+        reader.readAsText(file);
+      },
+
+      resetDemo() {
+        if (!confirm("Wirklich auf die Originaldaten aus der Excel-Datei zurücksetzen?")) return;
+        this.state = { products: INITIAL_PRODUCTS, entries: INITIAL_ENTRIES };
+        this.renderAll();
+      },
+
+      registerSW() {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+        }
+      }
+    };
+
+    app.load();
+  </script>
+</body>
+</html>

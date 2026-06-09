@@ -1,0 +1,12 @@
+APK automatisch über GitHub bauen:
+
+1. Erstelle auf github.com ein neues Repository, z.B. WildbestandAndroid.
+2. Lade den kompletten Inhalt dieses Ordners hoch.
+3. Öffne im Repository den Reiter "Actions".
+4. Wähle "Android APK bauen".
+5. Klicke "Run workflow".
+6. Nach dem grünen Haken unten bei "Artifacts" die Datei "Wildbestand-debug-apk" herunterladen.
+7. ZIP entpacken: darin liegt app-debug.apk.
+8. APK auf dein Android-Handy kopieren und installieren.
+
+Hinweis: Android wird beim Installieren fragen, ob Apps aus unbekannten Quellen erlaubt sind.
